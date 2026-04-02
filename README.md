@@ -1,1 +1,0 @@
-# ARstamprally2.5
