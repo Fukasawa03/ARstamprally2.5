@@ -538,7 +538,7 @@ var AR = (function () {
 
       wrapper.innerHTML =
         '<a-scene embedded '
-        + 'arjs="sourceType:webcam;debugUIEnabled:false;detectionMode:mono_and_matrix;matrixCodeType:3x3_hamming63;" '
+        + 'arjs="sourceType:webcam; facingMode: environment; debugUIEnabled:false;"
         + 'vr-mode-ui="enabled:false" '
         + 'renderer="logarithmicDepthBuffer:true;antialias:true;" '
         + 'style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;">'
