@@ -580,7 +580,7 @@ var AR = (function () {
       s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/aframe/1.4.2/aframe.min.js';
       s1.onload = function () {
         var s2 = document.createElement('script');
-        s2.src = 'https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js';
+        s2.src = 'https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js';
         s2.onload = build;
         document.head.appendChild(s2);
       };
