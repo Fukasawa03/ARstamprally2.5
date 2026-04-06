@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a0533">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>文化祭スタンプラリー</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ========== TITLE ========== -->
+<div id="screen-title" class="screen active">
+  <div class="title-bg">
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="orb o3"></div>
+    <div id="stars"></div>
+  </div>
+  <button id="btn-admin-entry" class="settings-btn">⚙</button>
+  <div class="title-body">
+    <div class="title-year" id="ui-event-year">2026</div>
+    <h1 class="title-main" id="ui-event-title">文化祭<br>スタンプラリー</h1>
+    <p class="title-sub" id="ui-event-subtitle">全スタンプを集めて特典をゲットしよう！</p>
+    <div class="title-btns">
+      <button class="btn btn-primary btn-glow" id="btn-start">
+        <span>🎯</span><span id="ui-btn-start">スタート！</span>
+      </button>
+      <button class="btn btn-outline" id="btn-howto">
+        <span>❓</span><span id="ui-btn-howto">遊び方</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MAP ========== -->
+<div id="screen-map" class="screen">
+  <div class="map-header">
+    <button class="icon-btn" id="btn-map-back">←</button>
+    <h2 id="ui-map-title">スタンプマップ</h2>
+    <div class="timer-box"><span>⏱</span><span id="timer-display">00:00</span></div>
+  </div>
+  <div class="progress-section">
+    <div class="progress-meta">
+      <span id="ui-progress-label">進捗</span>
+      <span id="progress-count">0 / 0</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
+  </div>
+  <div class="stamp-list" id="stamp-list"></div>
+  <div class="map-footer">
+    <button class="btn btn-primary btn-wide btn-glow" id="btn-go-scan">
+      <span>📷</span><span id="ui-btn-scan">ARスキャン開始</span>
+    </button>
+  </div>
+</div>
+
+<!-- ========== AR ========== -->
+<div id="screen-ar" class="screen screen-ar">
+  <div id="ar-scene-wrapper"></div>
+  <div class="ar-ui">
+    <div class="ar-header">
+      <button class="icon-btn icon-btn-light" id="btn-ar-back">←</button>
+      <span id="ui-ar-title">マーカーを照らして！</span>
+      <button class="icon-btn icon-btn-light" id="btn-ar-manual">⌨️</button>
+    </div>
+    <div class="scan-frame">
+      <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+      <div class="scan-line"></div>
+    </div>
+    <p class="ar-hint" id="ui-ar-hint">マーカーを枠内に合わせてください</p>
+    <div class="ar-msg" id="ar-msg"></div>
+    <div class="ar-banner" id="ar-banner">
+      <span id="ar-banner-emoji">🎉</span>
+      <span id="ar-banner-text">スキャン成功！</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== STAMP DETAIL ========== -->
+<div id="screen-stamp" class="screen">
+  <div id="sparkles-container"></div>
+  <div class="stamp-card">
+    <div class="stamp-badge"><span id="sa-emoji">⭐</span></div>
+    <div class="stamp-tag" id="sa-status-tag">スタンプ獲得！</div>
+    <h2 id="sa-name">スタンプ名</h2>
+    <div class="stamp-loc"><span>📍</span><span id="sa-location">場所</span></div>
+    <p id="sa-message">メッセージ</p>
+    <button class="btn btn-primary btn-wide" id="btn-stamp-back">マップに戻る</button>
+  </div>
+</div>
+
+<!-- ========== COMPLETE ========== -->
+<div id="screen-complete" class="screen screen-complete">
+  <canvas id="confetti-canvas"></canvas>
+  <div class="complete-inner">
+    <div class="trophy">🏆</div>
+    <h1 class="complete-title" id="ui-complete-title">コンプリート！</h1>
+    <p class="complete-sub" id="ui-complete-subtitle">全スタンプ制覇おめでとう！</p>
+    <div class="time-box">
+      <div class="time-label" id="ui-complete-time-label">クリアタイム</div>
+      <div class="time-val" id="complete-time-value">00:00</div>
+    </div>
+    <!-- ★ クーポンカード: 使用するボタン追加 -->
+    <div class="coupon-card" id="coupon-card">
+      <div class="coupon-ttl" id="ui-coupon-title">🎁 特典クーポン</div>
+      <div class="coupon-body" id="ui-coupon-body">特典内容</div>
+      <div class="coupon-code" id="ui-coupon-code">CODE: ????</div>
+      <div id="coupon-use-area" style="margin-top:14px;">
+        <button class="btn btn-success btn-wide" id="btn-use-coupon">✅ スタッフに見せて使用する</button>
+      </div>
+      <div id="coupon-used-area" style="display:none; margin-top:10px;">
+        <div class="coupon-used-stamp">使 用 済</div>
+      </div>
+    </div>
+    <button class="btn btn-outline btn-wide" id="btn-complete-map" style="margin-top:8px;">スタンプ一覧を見る</button>
+  </div>
+</div>
+
+<!-- ========== ADMIN ========== -->
+<div id="screen-admin" class="screen screen-admin">
+  <div class="admin-header">
+    <button class="icon-btn" id="btn-admin-back">←</button>
+    <h2>管理者パネル</h2>
+    <span id="admin-ver-badge">-</span>
+  </div>
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-tab="stamps">スタンプ</button>
+    <button class="admin-tab" data-tab="texts">表示文字</button>
+    <button class="admin-tab" data-tab="system">システム</button>
+  </div>
+
+  <!-- スタンプタブ -->
+  <div class="admin-tab-pane active" id="tab-stamps">
+    <div class="asec">
+      <div class="asec-hd"><h3>スタンプ一覧</h3><span class="hint-tag">☰ ドラッグで並び替え</span></div>
+      <div id="stamp-admin-list"></div>
+      <button class="btn btn-primary btn-wide" id="btn-add-stamp">＋ スタンプを追加</button>
+    </div>
+    <div class="asec">
+      <h3>マーカー管理（.mindファイル）</h3>
+      <div class="mind-drop" id="mind-drop-zone">
+        <span>📁</span><span>.mindファイルをドロップ / タップで選択</span>
+        <input type="file" id="mind-file-input" accept=".mind" style="display:none">
+      </div>
+      <div id="mind-file-list"></div>
+    </div>
+  </div>
+
+  <!-- 表示文字タブ: ★ save-barをpane内の末尾に移動 -->
+  <div class="admin-tab-pane" id="tab-texts">
+    <div class="asec"><h3>🎪 イベント情報</h3><div id="te-event"></div></div>
+    <div class="asec"><h3>🎯 スタート確認ダイアログ</h3><div id="te-start"></div></div>
+    <div class="asec"><h3>🗺 マップ画面</h3><div id="te-map"></div></div>
+    <div class="asec"><h3>📷 ARスキャン画面</h3><div id="te-ar"></div></div>
+    <div class="asec"><h3>⭐ スタンプ獲得・合言葉</h3><div id="te-stamp"></div></div>
+    <div class="asec"><h3>🏆 コンプリート画面</h3><div id="te-complete"></div></div>
+    <div class="asec"><h3>🎁 クーポン</h3><div id="te-coupon"></div></div>
+    <div class="asec">
+      <h3>❓ 遊び方ステップ</h3>
+      <div id="howto-editor"></div>
+      <button class="btn btn-ghost btn-sm" id="btn-add-howto-step" style="margin-top:8px;">＋ ステップ追加</button>
+    </div>
+    <!-- ★ save-barをここに移動（pane内stickyで常に見える） -->
+    <div class="admin-save-bar">
+      <button class="btn btn-primary btn-wide" id="btn-save-texts">💾 すべての文言を保存</button>
+    </div>
+  </div>
+
+  <!-- システムタブ: ★ 個人リセットをここに移動 -->
+  <div class="admin-tab-pane" id="tab-system">
+    <div class="asec">
+      <h3>年度・バージョン管理</h3>
+      <label class="field-label">バージョンID（変更で全参加者の進捗リセット）</label>
+      <div class="input-row">
+        <input type="text" id="admin-version-id" class="admin-input" placeholder="2026_Ver1">
+        <button class="btn btn-warning btn-sm" id="btn-update-version">更新</button>
+      </div>
+      <div class="warn-box">⚠ 変更すると参加者全員の進捗がリセットされます</div>
+    </div>
+    <div class="asec">
+      <h3>Google Sheets連携</h3>
+      <label class="field-label">GAS公開URL</label>
+      <input type="text" id="admin-sheets-url" class="admin-input" placeholder="https://script.google.com/macros/s/xxx/exec">
+      <button class="btn btn-outline btn-wide" id="btn-fetch-sheets" style="margin-top:10px;">🔄 スプレッドシートから読み込む</button>
+      <div class="info-box" id="sheets-status">未接続</div>
+    </div>
+    <div class="asec">
+      <h3>データ入出力</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-outline" id="btn-export-json">⬇ JSON出力</button>
+        <label class="btn btn-outline" for="import-json-input">⬆ JSON読込</label>
+        <input type="file" id="import-json-input" accept=".json" style="display:none">
+      </div>
+    </div>
+    <div class="asec">
+      <h3>リーダーボード</h3>
+      <label class="field-label">GASランキングURL</label>
+      <input type="text" id="admin-leaderboard-url" class="admin-input" placeholder="https://script.google.com/macros/s/xxx/exec">
+      <button class="btn btn-outline btn-wide" id="btn-view-leaderboard" style="margin-top:10px;">🏆 ランキングを見る</button>
+    </div>
+    <!-- ★ 個人リセットをシステムタブに移動 -->
+    <div class="asec asec-danger">
+      <h3>🔴 個人リセット（この端末のみ）</h3>
+      <p class="hint-text">自分のスタンプ進捗だけをリセットしたい場合はここから。他の参加者には影響しません。</p>
+      <button class="btn btn-danger btn-wide" id="btn-reset-self" style="margin-top:10px;">⚠ この端末の進捗をリセット</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODALS ========== -->
+
+<!-- スタート確認 -->
+<div id="modal-start" class="modal-wrap center-modal" style="display:none">
+  <div class="modal-bg" id="modal-start-bg"></div>
+  <div class="popup-card">
+    <div class="popup-icon">🎯</div>
+    <h2 class="popup-title">スタートしますか？</h2>
+    <p class="popup-desc">タイマーが開始されます。<br>準備ができたら「スタート！」を押してください。</p>
+    <button class="btn btn-primary btn-wide btn-glow" id="btn-start-ok"><span>🎯</span><span>スタート！</span></button>
+    <button class="btn btn-ghost btn-wide" id="btn-start-cancel" style="margin-top:10px;">キャンセル</button>
+  </div>
+</div>
+
+<!-- 遊び方 -->
+<div id="modal-howto" class="modal-wrap" style="display:none">
+  <div class="modal-bg" id="modal-howto-bg"></div>
+  <div class="modal-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <h2 id="ui-howto-title">遊び方</h2>
+      <button class="close-btn" id="btn-howto-close">✕</button>
+    </div>
+    <div id="howto-steps"></div>
+    <button class="btn btn-primary btn-wide" id="btn-howto-ok" style="margin-top:20px;">わかった！</button>
+  </div>
+</div>
+
+<!-- 合言葉 -->
+<div id="modal-manual" class="modal-wrap" style="display:none">
+  <div class="modal-bg" id="modal-manual-bg"></div>
+  <div class="modal-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <h2 id="ui-manual-title">合言葉入力</h2>
+      <button class="close-btn" id="btn-manual-close">✕</button>
+    </div>
+    <p class="sheet-desc" id="ui-manual-desc">スタンプ地点に掲示された数字を入力してください</p>
+    <input type="text" id="manual-input" class="code-input"
+           maxlength="6" placeholder="0000" inputmode="numeric" autocomplete="off">
+    <div id="manual-err" class="err-msg">合言葉が違います ❌</div>
+    <button class="btn btn-primary btn-wide" id="btn-manual-submit" style="margin-top:16px;">確認</button>
+  </div>
+</div>
+
+<!-- クーポン使用確認 -->
+<div id="modal-coupon-confirm" class="modal-wrap center-modal" style="display:none">
+  <div class="modal-bg" id="modal-coupon-confirm-bg"></div>
+  <div class="popup-card">
+    <div class="popup-icon">🎁</div>
+    <h2 class="popup-title">クーポンを使用しますか？</h2>
+    <p class="popup-desc">スタッフに画面を見せながら押してください。<br>一度使用すると元に戻せません。</p>
+    <button class="btn btn-success btn-wide" id="btn-coupon-confirm-ok">✅ 使用する</button>
+    <button class="btn btn-ghost btn-wide" id="btn-coupon-confirm-cancel" style="margin-top:10px;">キャンセル</button>
+  </div>
+</div>
+
+<!-- スタンプ編集 -->
+<div id="modal-stamp-edit" class="modal-wrap" style="display:none">
+  <div class="modal-bg" id="modal-stamp-edit-bg"></div>
+  <div class="modal-sheet modal-sheet-scroll">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <h2 id="stamp-edit-title">スタンプ編集</h2>
+      <button class="close-btn" id="btn-stamp-edit-close">✕</button>
+    </div>
+    <input type="hidden" id="stamp-edit-id">
+    <div class="fg"><label class="fl">スタンプ名 *</label><input type="text" id="stamp-edit-name" class="admin-input" placeholder="例: 科学部の秘密"></div>
+    <div class="fg"><label class="fl">場所 *</label><input type="text" id="stamp-edit-location" class="admin-input" placeholder="例: 3階 理科室"></div>
+    <div class="fg"><label class="fl">メッセージ</label><textarea id="stamp-edit-message" class="admin-input" rows="2" placeholder="取得時に表示するメッセージ"></textarea></div>
+    <div style="display:flex;gap:10px;">
+      <div class="fg" style="flex:1"><label class="fl">絵文字</label><input type="text" id="stamp-edit-emoji" class="admin-input" placeholder="⭐"></div>
+      <div class="fg" style="flex:1"><label class="fl">合言葉（数字）</label><input type="text" id="stamp-edit-code" class="admin-input" placeholder="1234" maxlength="6" inputmode="numeric"></div>
+    </div>
+    <div class="fg"><label class="fl">GLBモデルURL（省略可）</label><input type="text" id="stamp-edit-model" class="admin-input" placeholder="https://...model.glb"></div>
+    <div class="fg"><label class="fl">バーコードID（0〜63）</label><input type="number" id="stamp-edit-barcode" class="admin-input" placeholder="0" min="0" max="63"></div>
+    <div class="fg"><label class="fl">リンクする .mindファイル</label>
+      <select id="stamp-edit-mind" class="admin-input"><option value="">バーコードを使用（.mindなし）</option></select>
+    </div>
+    <div class="stamp-edit-footer">
+      <button class="btn btn-danger btn-sm" id="btn-stamp-edit-delete">削除</button>
+      <button class="btn btn-primary" id="btn-stamp-edit-save">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ランキング -->
+<div id="modal-leaderboard" class="modal-wrap" style="display:none">
+  <div class="modal-bg" id="modal-lb-bg"></div>
+  <div class="modal-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head"><h2>🏆 ランキング</h2><button class="close-btn" id="btn-lb-close">✕</button></div>
+    <div id="lb-list"><p style="text-align:center;color:var(--muted);padding:24px">読み込み中...</p></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
